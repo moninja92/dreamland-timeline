@@ -24,16 +24,19 @@ export const CONFIG = {
   /** Event selected on first load on desktop when the URL has no #event-id. */
   defaultEventId: "roswell-crash",
 
-  /** Category colors as OKLCH hues (0-360). Unknown categories get a neutral blue. */
-  categoryHues: {
-    Character: 300,
-    War: 25,
-    Corporate: 200,
-    Governance: 265,
-    Social: 150,
-    "Alien Event": 120,
-    International: 235,
-    Technological: 60,
-    Game: 340,
-  } as Record<string, number>,
+  /**
+   * Category "stamp ink" colors. Each maps to a CSS token in src/style.css, which holds
+   * the dark and light values. Unknown categories use the Manila accent.
+   */
+  categoryColors: {
+    Character: "--cat-char",
+    War: "--cat-war",
+    Corporate: "--cat-corp",
+    Governance: "--cat-gov",
+    Social: "--cat-social",
+    "Alien Event": "--cat-alien",
+    International: "--cat-intl",
+    Technological: "--cat-tech",
+    Game: "--cat-game",
+  } as Record<string, string>,
 };

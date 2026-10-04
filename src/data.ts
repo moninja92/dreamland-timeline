@@ -21,7 +21,8 @@ export interface TimelineEvent {
   related: string[];
   bible: string;
   visibility: Visibility;
-  hue: number;
+  /** CSS color for the category, e.g. var(--cat-war). */
+  color: string;
   searchText: string;
 }
 
@@ -139,7 +140,7 @@ export function normalize(csv: string): { events: TimelineEvent[]; problems: Row
       related: splitList(cell(row, "related")).map(slugify),
       bible: cell(row, "bible"),
       visibility,
-      hue: CONFIG.categoryHues[category] ?? 250,
+      color: `var(${CONFIG.categoryColors[category] ?? "--accent"})`,
       searchText: [title, category, branch, String(start.y), end ? String(end.y) : "", description].join(" ").toLowerCase(),
     });
   });

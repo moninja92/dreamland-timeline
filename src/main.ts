@@ -33,16 +33,36 @@ function writeSpoilerPref(v: boolean) {
 
 const isCharacter = (e: TimelineEvent) => e.category === "Character";
 const shownToReader = (e: TimelineEvent) => state.spoilers || e.visibility === "public";
+/** Spoiler rows stay in the list as redaction bars until spoilers are on. GM rows stay out entirely. */
+const redacted = (e: TimelineEvent) => !state.spoilers && e.visibility === "spoiler";
 
 function visible(): TimelineEvent[] {
   const words = state.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
   return events.filter(
     (e) =>
-      shownToReader(e) &&
+      (shownToReader(e) || (redacted(e) && !words.length)) &&
       state.cats.has(e.category) &&
       state.branches.has(e.branch) &&
       words.every((w) => e.searchText.includes(w)),
   );
+}
+
+/* ---------- theme + clearance ---------- */
+
+function currentTheme(): "dark" | "light" {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+function setTheme(t: "dark" | "light") {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("dreamland-theme", t); } catch { /* storage blocked */ }
+  const btn = $("theme");
+  btn.textContent = t === "dark" ? "Light mode" : "Dark mode";
+  btn.setAttribute("aria-label", `Switch to ${t === "dark" ? "light" : "dark"} mode`);
+}
+function renderClearance() {
+  const bar = $("clearance");
+  bar.classList.toggle("restricted", state.spoilers);
+  $("clearance-level").textContent = state.spoilers ? "RESTRICTED" : "PUBLIC";
 }
 
 /* ---------- filters ---------- */
@@ -52,8 +72,8 @@ function renderChips() {
   $("chips").innerHTML = categories
     .map((c) => {
       const n = pool.filter((e) => e.category === c).length;
-      const hue = CONFIG.categoryHues[c] ?? 250;
-      return `<button class="chip" style="--h:${hue}" data-cat="${esc(c)}" aria-pressed="${state.cats.has(c)}" title="Click to toggle. Shift-click to show only this one."><span class="dot"></span>${esc(c)} <span class="n">${n}</span></button>`;
+      const color = `var(${CONFIG.categoryColors[c] ?? "--accent"})`;
+      return `<button class="chip" style="--c:${color}" data-cat="${esc(c)}" aria-pressed="${state.cats.has(c)}" title="Click to toggle. Shift-click to show only this one."><span class="dot"></span>${esc(c)} <span class="n">${n}</span></button>`;
     })
     .join("");
 
@@ -96,7 +116,7 @@ function renderEra(list: TimelineEvent[]) {
 
 function renderList() {
   const list = visible();
-  const total = events.filter(shownToReader).length;
+  const total = events.filter((e) => shownToReader(e) || redacted(e)).length;
   $("count").textContent = `${list.length} of ${total} entries`;
   renderEra(list);
   if (!list.length) {
@@ -114,10 +134,18 @@ function renderList() {
     const left = ((e.start.idx - MIN) / RANGE) * 100;
     const width = ((e.endIdx - e.start.idx) / RANGE) * 100;
     const span = e.end ? ` → ${e.end.y}` : e.ongoing ? " → ongoing" : isCharacter(e) ? " → ?" : "";
+    if (redacted(e)) {
+      html += `<div class="ev redacted" style="--c:${e.color}" title="Restricted. Turn on spoilers to read this file.">
+      <span class="date">${e.start.y}<br>${shortDate(e.start)}</span>
+      <span class="t"><span class="bar-redact" style="width:${Math.min(28, 8 + e.title.length * 0.6)}ch"></span><span class="meta"><span class="stamp">Restricted</span></span></span>
+      <span class="track" aria-hidden="true"><span style="left:${left}%;width:${width}%"></span></span>
+    </div>`;
+      continue;
+    }
     const tags =
       (e.branch !== "main" ? `<span class="tag">${esc(e.branch)}</span>` : "") +
       (e.visibility !== "public" ? `<span class="tag spoiler">${e.visibility}</span>` : "");
-    html += `<button class="ev" style="--h:${e.hue}" data-id="${e.id}" aria-current="${state.sel === e.id}">
+    html += `<button class="ev" style="--c:${e.color}" data-id="${e.id}" aria-current="${state.sel === e.id}">
       <span class="date">${e.start.y}<br>${shortDate(e.start)}</span>
       <span class="t">${esc(e.title)}${tags}<span class="meta"><i>${esc(e.category)}</i>${span}</span></span>
       <span class="track" aria-hidden="true"><span style="left:${left}%;width:${width}%"></span></span>
@@ -131,7 +159,7 @@ function renderList() {
 function linkButtons(list: TimelineEvent[], extra?: (e: TimelineEvent) => string): string {
   if (!list.length) return `<p class="none">None yet.</p>`;
   return `<div class="links">${list
-    .map((x) => `<button style="--h:${x.hue}" data-id="${x.id}">${esc(x.title)}${extra ? ` <span class="none">${extra(x)}</span>` : ""}</button>`)
+    .map((x) => `<button style="--c:${x.color}" data-id="${x.id}">${esc(x.title)}${extra ? ` <span class="none">${extra(x)}</span>` : ""}</button>`)
     .join("")}</div>`;
 }
 
@@ -200,13 +228,16 @@ function renderDossier() {
   const bible = e.bible ? bibleLinks(e.bible) : "";
 
   el.innerHTML = `<button class="close" id="close" aria-label="Close details">Close</button>
-    <div class="cat" style="--h:${e.hue}">${esc(e.category)}${e.rank ? ` · #${e.rank}` : ""}${e.visibility !== "public" ? ` · ${e.visibility}` : ""}</div>
+    <div class="file-tab">File no. ${e.rank ? String(e.rank).padStart(3, "0") : esc(e.id)}</div>
+    <div class="dossier-body">
+    <div class="cat" style="--c:${e.color}">${esc(e.category)}${e.visibility !== "public" ? ` <span class="stamp">${e.visibility === "gm" ? "GM only" : "Restricted"}</span>` : ""}</div>
     <h2>${esc(e.title)}</h2>
     <dl class="dl">${rows}</dl>
     ${desc}
     <div class="actions"><button id="copy" type="button">Copy link</button>${bible}</div>
     ${related.length ? `<h3>Related entries · ${related.length}</h3>${linkButtons(related, (x) => String(x.start.y))}` : ""}
-    ${context}`;
+    ${context}
+    </div>`;
   el.scrollTop = 0;
 }
 
@@ -226,7 +257,7 @@ function select(id: string | null, scrollList: boolean) {
 function reveal(id: string) {
   const e = byId[id];
   if (!e) return;
-  if (!shownToReader(e)) { state.spoilers = true; $<HTMLInputElement>("spoilers").checked = true; }
+  if (!shownToReader(e)) { state.spoilers = true; $<HTMLInputElement>("spoilers").checked = true; renderClearance(); }
   if (!visible().some((x) => x.id === id)) {
     state.q = "";
     $<HTMLInputElement>("q").value = "";
@@ -257,6 +288,7 @@ function renderStatus(r: LoadResult) {
 /* ---------- events ---------- */
 
 function wire() {
+  $("theme").addEventListener("click", () => setTheme(currentTheme() === "dark" ? "light" : "dark"));
   $<HTMLInputElement>("q").addEventListener("input", (ev) => {
     state.q = (ev.target as HTMLInputElement).value;
     renderList();
@@ -264,6 +296,7 @@ function wire() {
   $<HTMLInputElement>("spoilers").addEventListener("change", (ev) => {
     state.spoilers = (ev.target as HTMLInputElement).checked;
     writeSpoilerPref(state.spoilers);
+    renderClearance();
     if (state.sel && !shownToReader(byId[state.sel])) state.sel = null;
     renderChips();
     renderList();
@@ -321,6 +354,7 @@ function wire() {
 
 async function boot() {
   wire();
+  setTheme(currentTheme());
   let result: LoadResult;
   try {
     result = await loadTimeline();
@@ -344,6 +378,7 @@ async function boot() {
   state.branches = new Set(branches);
   state.spoilers = readSpoilerPref();
   $<HTMLInputElement>("spoilers").checked = state.spoilers;
+  renderClearance();
 
   const firstYear = Math.floor(events[0].start.y / 10) * 10;
   const lastYear = Math.max(...events.map((e) => (e.end ?? e.start).y));

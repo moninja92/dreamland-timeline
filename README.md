@@ -63,4 +63,6 @@ src/data.ts       loads the CSV, checks rows, builds the event list
 src/main.ts       search, filters, list, detail panel
 src/style.css     look and feel, light and dark themes
 public/timeline-snapshot.csv   offline fallback copy of the sheet
+public/favicon.svg             browser tab icon (Scope D on Vault Black)
+public/brand/                  Scope D emblem: scope-d.svg (inherits text color), manila, carbon and stamp-red versions
 ```

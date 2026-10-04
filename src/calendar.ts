@@ -59,7 +59,7 @@ export function fullDate(date: DDate): string {
 }
 
 export function shortDate(date: DDate): string {
-  return `${String(date.m).padStart(2, "0")}/${String(date.d).padStart(2, "0")}`;
+  return `${String(date.m).padStart(2, "0")}.${String(date.d).padStart(2, "0")}`;
 }
 
 export function duration(a: DDate, b: DDate): string {
