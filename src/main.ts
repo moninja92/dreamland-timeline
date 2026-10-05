@@ -1,6 +1,6 @@
 import "./style.css";
 import { CONFIG } from "./config";
-import { DAYS_PER_YEAR, duration, fullDate, makeDate, shortDate, yearsBetween } from "./calendar";
+import { type DDate, DAYS_PER_YEAR, duration, fullDate, makeDate, shortDate, yearsBetween } from "./calendar";
 import { LoadResult, TimelineEvent, loadTimeline, slugify } from "./data";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -380,7 +380,16 @@ async function boot() {
   $<HTMLInputElement>("spoilers").checked = state.spoilers;
   renderClearance();
 
-  const firstYear = Math.floor(events[0].start.y / 10) * 10;
+  // Header range: the earliest start and latest end (or start) across every entry in the sheet.
+  const first = events.reduce((a, e) => (e.start.idx < a.idx ? e.start : a), events[0].start);
+  const last = events.reduce((a, e) => {
+    const d = e.end ?? e.start;
+    return d.idx > a.idx ? d : a;
+  }, events[0].end ?? events[0].start);
+  const stamp = (d: DDate) => `${d.y}.${shortDate(d)}`;
+  $("date-span").textContent = `${stamp(first)} → ${stamp(last)}`;
+
+  const firstYear = Math.floor(first.y / 10) * 10;
   const lastYear = Math.max(...events.map((e) => (e.end ?? e.start).y));
   MIN = makeDate(firstYear, 1, 1).idx;
   RANGE = Math.max(DAYS_PER_YEAR, makeDate(lastYear, 12, 28).idx - MIN);
