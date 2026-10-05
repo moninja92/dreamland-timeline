@@ -1,0 +1,5 @@
+id,name,resist,type,desc
+kin_01,Human,"0,0,0,0",Humanoid,"Humans are the most populous kindred, in spite of their own efforts."
+kin_02,Revenant,"0,0,0,2",Mutant,Revenants are humans who once died and returned to life with little to no memory of before.
+kin_03,Oni,"0.10,0,0.1,0",Monster,Oni has become a collective term for things that go bump in the night.
+kin_04,Fish,"0,0.10,0,0",Machine,"Fish became a colloquial for 'artificial human', robots built to serve a non-existant labor gap."

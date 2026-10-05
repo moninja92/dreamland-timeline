@@ -114,3 +114,24 @@ Scroll to the bottom of the site. If any row has a problem, a red line reads "ro
 A row with a broken date is skipped until it's fixed. Everything else still loads.
 
 If the bottom of the page says it's showing the bundled snapshot instead of the live sheet, the site couldn't reach Google. Let Maurice know.
+
+## The Personnel page (character creator)
+
+The site's Personnel tab is a character creator. It reads these tabs of the Dreamland Brain sheet live, the same way the timeline reads **timelineRead**:
+
+| Tab | What the creator uses | Columns it needs |
+|---|---|---|
+| `db.kind` | Kindred choices and their resistances | `name`, `resist`, `type`, `desc` |
+| `db.bio` | Bio choices | `name`, `type`, `desc` |
+| `db.emp` | Career choices and their skill weights | `name`, `mission`, `combat`, `knowledge`, `social`, `exploration` |
+| `db.education` | Education choices | `name`, `type`, `skill`, `tag`, `desc` |
+
+- Adding a row to any of these tabs adds a choice to the creator on the next refresh.
+- Don't rename these tabs or those column headers. If the creator can't read a tab, it falls back to a built-in copy and says so at the bottom of the page, so new rows won't show up until it's fixed.
+- A new education needs `type` set to `Skill` and `skill` set to one of the 12 skills (Martial, Ballistic, Advanced, Natural, Applied, Mythos, Moxie, Influence, Vigilance, Entry, Intrusion, Transport), or the creator won't offer it.
+- A new Bio or Career also needs a matching row in `db.education` (type `Bio` or `Career`) so its description shows on the character sheet.
+- Point budgets and stat formulas (28 stat points, 2 Focus skills, HP, Speed and so on) are built into the page, not read from the sheet. If those rules change, tell Maurice. The full list is in `CHARACTER-RULES.md`.
+
+### Adding a player's character to the sheet
+
+Players export with **CSV for the sheet** or **Copy row**. Both give one row in the same column order as the `save` tab. Paste it under the last character in `save` and the character sheets, `control` and encounters pick it up.

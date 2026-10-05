@@ -1,0 +1,13 @@
+id,name,summary,type,desc
+bio_01,Academic,"Research methods, critical analysis, scholarly writing",Knowledge,You grew up in a world learning what the world held secret.
+bio_02,Communal,"Resource sharing, conflict mediation, group decision-making",Social,You grew up in a world where people take care of each other.
+bio_03,Corporate,"Brand alignment, performance metrics, strategic planning",Social,You grew up in a world of economics and business.
+bio_04,Criminal,"Deception tactics, illicit networks, risk assessment",Exploration,You grew up in a world of violence and crime.
+bio_05,Hermit,"Self-defense planning, vigilance routines, survival hardening",Knowledge,You grew up in a world isolated from society.
+bio_06,Loyalist,"Chain-of-command discipline, identity signaling, morale reinforcement",Combat,You grew up in a world with belief in your country.
+bio_07,Nomadic,"Portable shelter systems, environmental reading, route memory",Exploration,You grew up in a world where your world kept moving.
+bio_08,Political,"Public messaging, coalition building, negotiation strategy",Social,You grew up in a world of debate and policy.
+bio_09,Rebel,"Guerrilla tactics, sabotage, terrain advantage",Combat,You grew up in a world resisting the powers that be.
+bio_10,Religious,"Moral instruction, oral tradition, symbolic interpretation",Knowledge,You grew up in a world where faith is the path forward.
+bio_11,Street,"Urban navigation, situational awareness, rapid adaptation",Exploration,You grew up in a world of survival at the bottom.
+bio_12,War Torn,"Threat recognition, rapid evacuation, trauma awareness",Combat,You grew up in a world torn asunder by war.

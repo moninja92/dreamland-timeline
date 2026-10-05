@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dreamland Personnel Office</title>
+  <meta name="description" content="Create a Dreamland character and export it as CSV, PNG, PDF or a save file.">
+  <meta name="theme-color" content="#0E1114">
+  <meta property="og:title" content="Dreamland Personnel Office">
+  <meta property="og:description" content="Create a Dreamland character and export it as CSV, PNG, PDF or a save file.">
+  <script>
+    try { if (localStorage.getItem("dreamland-theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Special+Elite&display=swap">
+</head>
+<body class="page-personnel">
+  <div class="clearance" id="clearance" role="status">
+    <span>Dreamland Archive</span><span class="sep">//</span><span>Personnel Office</span><span class="sep">//</span><span>Form <b>DL-7</b></span>
+  </div>
+
+  <div class="wrap">
+    <header class="top">
+      <nav class="site-nav" aria-label="Sections">
+        <a href="./">Timeline</a>
+        <a href="character.html" aria-current="page">Personnel</a>
+      </nav>
+      <div class="brand">
+        <div class="lockup">
+          <svg class="emblem" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <rect x="10" y="8" width="9" height="48" fill="currentColor"/>
+            <path d="M23 8H32A24 24 0 0 1 32 56H23V50H32A18 18 0 0 0 32 14H23Z" fill="currentColor"/>
+            <path class="sweep" d="M31.03 20.53A14 14 0 0 1 32 42.72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path class="beam" d="M23 32L35.26 21.72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="23" cy="32" r="3" fill="currentColor"/>
+          </svg>
+          <h1 class="wordmark" aria-label="Dreamland"><span>DREAM</span><span class="land">LAND</span></h1>
+        </div>
+        <div class="brand-sub">
+          <span class="sub-title">Personnel Office</span>
+          <span class="sub">Character creation · Form DL-7</span>
+        </div>
+      </div>
+      <div class="controls pc-actions">
+        <button type="button" class="act" id="randomize">Randomize</button>
+        <button type="button" class="act" id="new">New file</button>
+        <label class="act" for="load">Load save file<input id="load" type="file" accept=".json,application/json" hidden></label>
+        <button class="theme-btn" id="theme" type="button">Light mode</button>
+      </div>
+    </header>
+
+    <main class="pc" id="pc">
+      <form class="pc-form" id="form" autocomplete="off" novalidate>
+        <p class="count" id="loading">Retrieving personnel forms…</p>
+      </form>
+      <aside class="pc-preview">
+        <div class="sheet-scroll"><article class="sheet" id="sheet" aria-label="Character sheet preview"></article></div>
+        <section class="exports" aria-labelledby="exports-h">
+          <h2 id="exports-h">Export</h2>
+          <div class="export-row">
+            <button type="button" class="act primary" data-export="csv">CSV for the sheet</button>
+            <button type="button" class="act" data-export="copy">Copy row</button>
+            <button type="button" class="act" data-export="png">Image</button>
+            <button type="button" class="act" data-export="pdf">PDF</button>
+            <button type="button" class="act" data-export="json">Save file</button>
+          </div>
+          <p class="export-note" id="export-note"></p>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="note" id="status"></footer>
+  </div>
+  <script type="module" src="/src/character/main.ts"></script>
+</body>
+</html>

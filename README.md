@@ -13,14 +13,6 @@ npm run dev
 
 Open the address it prints (usually http://localhost:5173).
 
-## Put it online with GitHub Pages
-
-1. Create a new GitHub repository (for example `dreamland-timeline`) and push this folder to its `main` branch.
-2. In the repository, go to Settings > Pages and set Source to **GitHub Actions**.
-3. The included workflow (`.github/workflows/deploy.yml`) builds and publishes on every push to `main`. The site appears at `https://<your-username>.github.io/dreamland-timeline/`.
-
-Links to a single event look like `https://<your-username>.github.io/dreamland-timeline/#roswell-crash`, which is easy to paste into Discord.
-
 ## Where the data comes from
 
 Set in `src/config.ts`:
@@ -54,6 +46,18 @@ Rows with problems (bad dates, duplicate ids, links that point nowhere) are list
 
 Twelve months of 28 days, 7-day weeks, 336-day years. Since 28 is exactly four weeks, every month starts on Sunday, so the weekday depends only on the day of the month. All date math lives in `src/calendar.ts`.
 
+## Personnel page (character creator)
+
+`character.html` is a second page, linked from the Timeline/Personnel tabs at the top of both pages. Players build a character step by step (Identity, Stats, Skills, Educations, Review) and export it:
+
+- **CSV for the sheet** and **Copy row**: one row in the exact column order of the `save` tab. Paste it under the last character in `save`. Only unlocked once the character passes every rule.
+- **Image** and **PDF**: the personnel file as shown on the page.
+- **Save file**: a .json the player can load back in with "Load save file" to keep editing.
+
+The page reads the `db.kind`, `db.bio`, `db.emp` and `db.education` tabs live, so new Kindreds, Bios, Careers and Educations added there appear automatically. Bundled copies in `public/data/` are used if the sheet can't be reached. Stat math and point budgets live in `src/character/rules.ts`; if the sheet's formulas change, that file changes too. Full rules: `CHARACTER-RULES.md`.
+
+Each player's work in progress is kept in their own browser until they start a new file.
+
 ## Project layout
 
 ```
@@ -62,6 +66,9 @@ src/calendar.ts   Dreamland date parsing, weekdays, durations
 src/data.ts       loads the CSV, checks rows, builds the event list
 src/main.ts       search, filters, list, detail panel
 src/style.css     look and feel, light and dark themes
+src/character/    Personnel page: rules.ts (math), data.ts (sheet tabs), main.ts (form and sheet), export.ts, character.css
+character.html    Personnel page
+public/data/      offline copies of db.kind, db.bio, db.emp, db.education
 public/timeline-snapshot.csv   offline fallback copy of the sheet
 public/favicon.svg             browser tab icon (Scope D on Vault Black)
 public/brand/                  Scope D emblem: scope-d.svg (inherits text color), manila, carbon and stamp-red versions

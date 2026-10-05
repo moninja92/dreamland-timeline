@@ -1,0 +1,25 @@
+id,name,mission,combat,knowledge,social,exploration
+career_004,Agent,Execute · Maneuver · Exploit,1.0,0.25,0.75,0.5
+career_019,Caravanner,Transport · Provision · Expansion,0.75,0.5,0.25,1.0
+career_014,Coordinator,Manage · Organize · Mobilize,0.25,0.5,1.0,0.75
+career_020,Courier,Deliver · Relay · Dispatch,0.75,0.25,0.5,1.0
+career_017,Director,Command · Strategize · Negotiate,0.5,0.75,1.0,0.25
+career_003,Dragoon,Conquer · Enforce · Menace,1.0,0.5,0.75,0.25
+career_012,Engineer,Construct · Innovate · Optimize,0.75,1.0,0.5,0.25
+career_013,Envoy,Represent · Mediate · Parley,0.5,0.25,1.0,0.75
+career_018,Executive,Authorize · Delegate · Invest,0.25,0.75,1.0,0.5
+career_002,Exterminator,Eliminate · Purge · Suppress,1.0,0.75,0.25,0.5
+career_015,Governor,Regulate · Administer · Govern,0.75,0.25,1.0,0.5
+career_001,Hunter,Track · Pursue · Capture,1.0,0.75,0.5,0.25
+career_022,Infiltrator,Infiltrate · Sabotage · Breach,0.5,0.75,0.25,1.0
+career_021,Navigator,Chart · Orient · Navigate,0.25,0.75,0.5,1.0
+career_011,Operator,Control · Improvise · Adapt,0.75,1.0,0.25,0.5
+career_005,Ranger,Patrol · Defend · Roam,1.0,0.25,0.5,0.75
+career_024,Recon,Scout · Observe · Report,0.5,0.25,0.75,1.0
+career_016,Recruiter,Recruit · Cultivate · Enlist,0.75,0.5,1.0,0.25
+career_010,Researcher,Test · Experiment · Discover,0.5,1.0,0.25,0.75
+career_007,Sage,Analyze · Advise · Foresee,0.25,1.0,0.75,0.5
+career_008,Settler,Establish · Develop · Populate,0.5,1.0,0.75,0.25
+career_023,Surveyor,Survey · Assess · Measure,0.25,0.5,0.75,1.0
+career_009,Technician,Maintain · Repair · Calibrate,0.25,1.0,0.5,0.75
+career_006,Vanguard,Advance · Engage · Lead,1.0,0.5,0.25,0.75

@@ -1,13 +1,16 @@
 // Everything a non-programmer might need to change lives in this file.
 
 export const CONFIG = {
+  /** The Dreamland Brain spreadsheet. The character creator reads its db.kind, db.bio, db.emp and db.education tabs. */
+  sheetId: "19NZZGrcnWRcVd95kszYeEPNwpck0bjC1vcTXmVOHsLM",
+
   /**
    * Where the timeline data comes from. Any CSV URL works.
    * Recommended: in Google Sheets, File > Share > Publish to web > "timelineread" > CSV,
    * then paste that link here. The gviz link below works today because the sheet is link-shared.
    */
   sheetCsvUrl:
-    "https://docs.google.com/spreadsheets/d/19NZZGrcnWRcVd95kszYeEPNwpck0bjC1vcTXmVOHsLM/gviz/tq?tqx=out:csv&sheet=timelineread",
+    "https://docs.google.com/spreadsheets/d/19NZZGrcnWRcVd95kszYeEPNwpck0bjC1vcTXmVOHsLM/gviz/tq?tqx=out:csv&sheet=timelineRead",
 
   /** Bundled copy used when the sheet can't be reached (offline, Google hiccup). */
   fallbackCsvPath: "timeline-snapshot.csv",
