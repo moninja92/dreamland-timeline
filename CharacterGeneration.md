@@ -99,6 +99,10 @@ Checked against Thagrand Daedalyn (Energy 5, Reflex 8, Tact 8, Fortune 4, Ego 4,
 - **Equipment** comes from loot (`booty`). **Decided 2026-10-04:** new characters start with Fist in both hands and every other slot empty.
 - **Perks** (`perks` tab) look like level-up rewards, so they're left out of creation for now.
 
+## Names
+
+**Random name** picks a first name and a surname from the `calc` tab: Male First (B), Female First (C), or both for Any, plus Surname (D). The page remembers the Any/Male/Female choice. **Randomize** rolls a name only when the name field is empty.
+
 ## Exports
 
 | Format | Contents |

@@ -1,6 +1,6 @@
 import "../style.css";
 import "./character.css";
-import { CATEGORIES, Computed, Draft, RULES, RuleData, STATS, Stat, clampLevel, compute, emptyDraft, randomDraft, tidy } from "./rules";
+import { CATEGORIES, Computed, Draft, NameStyle, RULES, RuleData, STATS, Stat, clampLevel, compute, emptyDraft, randomDraft, randomName, tidy } from "./rules";
 import { loadRules } from "./data";
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -33,6 +33,11 @@ const SKILL_INFO: Record<string, [string, string]> = {
   Transport: ["Piloting and repairing vehicles.", "Pilot · Mechanic"],
 };
 const STORE_KEY = "dreamland-character-draft";
+const NAME_STYLE_KEY = "dreamland-name-style";
+
+let nameStyle: NameStyle = (() => {
+  try { const v = localStorage.getItem(NAME_STYLE_KEY); return v === "male" || v === "female" ? v : "any"; } catch { return "any"; }
+})();
 
 let data: RuleData;
 let draft: Draft = emptyDraft();
@@ -90,8 +95,13 @@ function renderForm() {
   <section class="step" aria-labelledby="s1">
     <h2 id="s1"><span class="no">01</span> Identity</h2>
     <div class="grid2">
-      <label class="field wide" for="name"><span>Name</span>
-        <input id="name" type="text" maxlength="60" value="${esc(draft.name)}" placeholder="Full name as it appears on file"></label>
+      <div class="field wide"><label for="name"><span>Name</span></label>
+        <div class="name-row">
+          <input id="name" type="text" maxlength="60" value="${esc(draft.name)}" placeholder="Full name as it appears on file">
+          ${data.names.surnames.length ? `<button type="button" class="act" id="roll-name">Random name</button>` : ""}
+        </div>
+        ${data.names.surnames.length ? `<div class="name-style" role="radiogroup" aria-label="Random name style">${(["any", "male", "female"] as NameStyle[]).map((s) => `<button type="button" role="radio" aria-checked="${nameStyle === s}" data-name-style="${s}">${s === "any" ? "Any" : s === "male" ? "Male" : "Female"}</button>`).join("")}</div>` : ""}
+      </div>
       <div class="field"><span>Level</span>${stepper("level", level, 1, RULES.maxLevel, "Level")}</div>
     </div>
     <div class="pickers">
@@ -314,6 +324,17 @@ function wire() {
   form.addEventListener("click", (ev) => {
     const b = (ev.target as HTMLElement).closest<HTMLButtonElement>("button");
     if (!b || b.disabled) return;
+    if (b.id === "roll-name") {
+      const name = randomName(data.names, nameStyle);
+      if (name) update({ ...draft, name });
+      return;
+    }
+    if (b.dataset.nameStyle) {
+      nameStyle = b.dataset.nameStyle as NameStyle;
+      try { localStorage.setItem(NAME_STYLE_KEY, nameStyle); } catch { /* ignore */ }
+      renderForm();
+      return;
+    }
     if (b.dataset.step) {
       const id = b.dataset.step;
       const delta = Number(b.dataset.d);
@@ -333,7 +354,8 @@ function wire() {
   });
   form.addEventListener("submit", (ev) => ev.preventDefault());
 
-  $("randomize").addEventListener("click", () => update(randomDraft(data, draft.level, draft.name)));
+  // Keeps a name the player typed; otherwise rolls one from the calc tab.
+  $("randomize").addEventListener("click", () => update(randomDraft(data, draft.level, draft.name.trim() ? draft.name : randomName(data.names, nameStyle))));
   $("new").addEventListener("click", () => {
     const btn = $("new");
     if (btn.dataset.confirm !== "1") {
@@ -402,7 +424,7 @@ async function boot() {
     data = res.data;
     $("status").innerHTML = res.snapshotTabs.length
       ? `<div>Couldn't reach ${res.snapshotTabs.join(", ")} in the sheet, using the bundled copy for ${res.snapshotTabs.length === 1 ? "it" : "those"}.</div>`
-      : `<div>Kindreds, Bios, Careers and Educations are live from the Dreamland sheet.</div>`;
+      : `<div>Kindreds, Bios, Careers, Educations and names are live from the Dreamland sheet.</div>`;
   } catch (err) {
     $("form").innerHTML = `<p class="empty">The personnel forms couldn't load: ${esc(err instanceof Error ? err.message : String(err))}. Refresh to try again.</p>`;
     return;

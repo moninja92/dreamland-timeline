@@ -125,12 +125,14 @@ The site's Personnel tab is a character creator. It reads these tabs of the Drea
 | `db.bio` | Bio choices | `name`, `type`, `desc` |
 | `db.emp` | Career choices and their skill weights | `name`, `mission`, `combat`, `knowledge`, `social`, `exploration` |
 | `db.education` | Education choices | `name`, `type`, `skill`, `tag`, `desc` |
+| `calc` | Random names: first names from Male First (column B) and Female First (column C), surnames from Surname (column D) | `Male First`, `Female First`, `Surname` |
 
 - Adding a row to any of these tabs adds a choice to the creator on the next refresh.
 - Don't rename these tabs or those column headers. If the creator can't read a tab, it falls back to a built-in copy and says so at the bottom of the page, so new rows won't show up until it's fixed.
 - A new education needs `type` set to `Skill` and `skill` set to one of the 12 skills (Martial, Ballistic, Advanced, Natural, Applied, Mythos, Moxie, Influence, Vigilance, Entry, Intrusion, Transport), or the creator won't offer it.
 - A new Bio or Career also needs a matching row in `db.education` (type `Bio` or `Career`) so its description shows on the character sheet.
-- Point budgets and stat formulas (28 stat points, 2 Focus skills, HP, Speed and so on) are built into the page, not read from the sheet. If those rules change, tell Maurice. The full list is in `CHARACTER-RULES.md`.
+- To add names to the randomizer, add them under Male First, Female First or Surname in `calc`. All Names (column A) is built from B and C, so leave its formula alone. Keep those header names as they are; the other columns in `calc` aren't used by the site.
+- Point budgets and stat formulas (28 stat points, 2 Focus skills, HP, Speed and so on) are built into the page, not read from the sheet. If those rules change, tell Maurice. The full list is in `CharacterGeneration.md`.
 
 ### Adding a player's character to the sheet
 

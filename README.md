@@ -54,7 +54,9 @@ Twelve months of 28 days, 7-day weeks, 336-day years. Since 28 is exactly four w
 - **Image** and **PDF**: the personnel file as shown on the page.
 - **Save file**: a .json the player can load back in with "Load save file" to keep editing.
 
-The page reads the `db.kind`, `db.bio`, `db.emp` and `db.education` tabs live, so new Kindreds, Bios, Careers and Educations added there appear automatically. Bundled copies in `public/data/` are used if the sheet can't be reached. Stat math and point budgets live in `src/character/rules.ts`; if the sheet's formulas change, that file changes too. Full rules: `CHARACTER-RULES.md`.
+**Random name** rolls a first name and surname from Nat's lists in the `calc` tab (Any, Male or Female first names). **Randomize** builds a whole valid character and also rolls a name if the name field is empty.
+
+The page reads the `db.kind`, `db.bio`, `db.emp`, `db.education` and `calc` tabs live, so new Kindreds, Bios, Careers and Educations added there appear automatically. Bundled copies in `public/data/` are used if the sheet can't be reached. Stat math and point budgets live in `src/character/rules.ts`; if the sheet's formulas change, that file changes too. Full rules: `CharacterGeneration.md`.
 
 Each player's work in progress is kept in their own browser until they start a new file.
 
@@ -68,7 +70,7 @@ src/main.ts       search, filters, list, detail panel
 src/style.css     look and feel, light and dark themes
 src/character/    Personnel page: rules.ts (math), data.ts (sheet tabs), main.ts (form and sheet), export.ts, character.css
 character.html    Personnel page
-public/data/      offline copies of db.kind, db.bio, db.emp, db.education
+public/data/      offline copies of db.kind, db.bio, db.emp, db.education, calc (names)
 public/timeline-snapshot.csv   offline fallback copy of the sheet
 public/favicon.svg             browser tab icon (Scope D on Vault Black)
 public/brand/                  Scope D emblem: scope-d.svg (inherits text color), manila, carbon and stamp-red versions

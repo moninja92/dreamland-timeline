@@ -1,5 +1,5 @@
 // Dreamland character rules, mirrored from the Dreamland Brain workbook (gen, control, save.handler).
-// See CHARACTER-RULES.md for where each number comes from.
+// See CharacterGeneration.md for where each number comes from.
 
 export const STATS = ["Power", "Energy", "Reflex", "Fortune", "Ego", "Curiosity", "Tact"] as const;
 export type Stat = (typeof STATS)[number];
@@ -40,11 +40,24 @@ export interface Bio { name: string; type: string; summary: string; desc: string
 export interface Career { name: string; mission: string; weights: Record<CategoryKey, number>; }
 export interface Education { name: string; type: "Bio" | "Career" | "Skill" | string; skill: string; tag: string; desc: string; }
 
+export interface NameLists { male: string[]; female: string[]; all: string[]; surnames: string[]; }
+export type NameStyle = "any" | "male" | "female";
+
 export interface RuleData {
   kindreds: Kindred[];
   bios: Bio[];
   careers: Career[];
   educations: Education[];
+  /** First names and surnames from the calc tab. Empty lists if the tab can't be read. */
+  names: NameLists;
+}
+
+/** First name + surname from Nat's lists in the calc tab. Returns "" if there are no names to pick from. */
+export function randomName(names: NameLists, style: NameStyle = "any"): string {
+  const firsts = style === "male" && names.male.length ? names.male : style === "female" && names.female.length ? names.female : names.all;
+  if (!firsts.length || !names.surnames.length) return "";
+  const pick = (a: string[]) => a[Math.floor(Math.random() * a.length)];
+  return `${pick(firsts)} ${pick(names.surnames)}`;
 }
 
 /* ---------- a character in progress ---------- */

@@ -1,6 +1,6 @@
 import Papa from "papaparse";
 import { CONFIG } from "../config";
-import type { Bio, Career, Education, Kindred, RuleData } from "./rules";
+import type { Bio, Career, Education, Kindred, NameLists, RuleData } from "./rules";
 
 type Row = Record<string, string>;
 
@@ -43,11 +43,13 @@ export interface RuleLoad { data: RuleData; liveTabs: string[]; snapshotTabs: st
 
 export async function loadRules(): Promise<RuleLoad> {
   const has = (...keys: string[]) => (rows: Row[]) => rows.length > 0 && keys.every((k) => k in rows[0]);
-  const [kind, bio, emp, edu] = await Promise.all([
+  const [kind, bio, emp, edu, calc] = await Promise.all([
     loadTab("db.kind", has("name", "resist")),
     loadTab("db.bio", has("name", "desc")),
     loadTab("db.emp", has("name", "combat", "knowledge", "social", "exploration")),
     loadTab("db.education", has("name", "type", "skill", "tag")),
+    // Names are a nice-to-have: if both the live tab and the bundled copy fail, the creator still works.
+    loadTab("calc", has("surname")).catch(() => ({ rows: [] as Row[], live: false })),
   ]);
 
   const kindreds: Kindred[] = kind.rows.filter((r) => v(r, "name")).map((r) => {
@@ -70,9 +72,21 @@ export async function loadRules(): Promise<RuleLoad> {
     name: v(r, "name"), type: v(r, "type"), skill: v(r, "skill"), tag: v(r, "tag"), desc: v(r, "desc"),
   }));
 
-  const tabs = { "db.kind": kind.live, "db.bio": bio.live, "db.emp": emp.live, "db.education": edu.live };
+  // calc: A = All Names, B = Male First, C = Female First, D = Surname. Columns have different lengths.
+  const col = (k: string) => [...new Set(calc.rows.map((r) => v(r, k)).filter(Boolean))];
+  const male = col("male first");
+  const female = col("female first");
+  const allCol = col("all names");
+  const names: NameLists = {
+    male,
+    female,
+    all: allCol.length ? allCol : [...new Set([...male, ...female])],
+    surnames: col("surname"),
+  };
+
+  const tabs = { "db.kind": kind.live, "db.bio": bio.live, "db.emp": emp.live, "db.education": edu.live, calc: calc.live };
   return {
-    data: { kindreds, bios, careers, educations },
+    data: { kindreds, bios, careers, educations, names },
     liveTabs: Object.entries(tabs).filter(([, l]) => l).map(([t]) => t),
     snapshotTabs: Object.entries(tabs).filter(([, l]) => !l).map(([t]) => t),
   };

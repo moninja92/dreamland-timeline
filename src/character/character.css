@@ -33,7 +33,7 @@
 @media (max-width: 520px) { .grid2 .wide { grid-column: auto; } }
 .pickers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
 .field { display: grid; gap: 6px; align-content: start; min-width: 0; }
-.field > span { font-family: var(--f-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.field > span, .field > label > span { font-family: var(--f-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .field input, .field select {
   width: 100%; min-width: 0; padding: 9px 10px; font: inherit; color: var(--ink);
   background: var(--bg); border: 1px solid var(--rule); border-bottom: 2px solid var(--accent); border-radius: 2px;
@@ -145,3 +145,17 @@
 .sheet.exporting .sh-tab { top: 0; left: 0; border-radius: 0 0 4px 0; }
 .sheet.exporting .sh-grid { grid-template-columns: 1fr 1fr; }
 .sheet.exporting .sh-skills { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* name row: text field + Random name, with Any / Male / Female underneath */
+.name-row { display: flex; gap: 8px; min-width: 0; }
+.name-row input { flex: 1 1 auto; min-width: 0; }
+.name-row .act { flex: none; }
+.field .name-row input { width: auto; }
+.name-style { display: inline-flex; border: 1px solid var(--rule); border-radius: 2px; width: max-content; }
+.name-style button {
+  border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 3px 10px;
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+}
+.name-style button + button { border-left: 1px solid var(--rule); }
+.name-style button[aria-checked="true"] { background: var(--accent-soft); color: var(--accent); }
+@media (max-width: 420px) { .name-row { flex-wrap: wrap; } .name-row .act { width: 100%; justify-content: center; } }
